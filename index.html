@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimensi Cinta Kita | Sebuah Kisah Interaktif</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* [1] CSS UNTUK DESAIN & STRUKTUR NAVIGASI BARU */
+
+        :root {
+            --bg-color: #fef9f8; --text-color: #3f3333; --primary-color: #e5a5a5;
+            --secondary-color: #8b5e5e; --accent-color: #d48484; --card-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(139, 94, 94, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Mencegah scroll default */
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* STRUKTUR UTAMA HORIZONTAL */
+        #main-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw; /* Lebar awal, akan diubah oleh JS */
+            transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1); /* Transisi geser yang smooth */
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+            overflow-y: auto; /* Scroll vertikal jika kontennya panjang */
+        }
+        
+        /* Konten di dalam slide agar tidak terlalu lebar */
+        .slide-content { max-width: 1100px; width: 100%; text-align: center; }
+
+        /* [PERUBAHAN CSS] NAVIGASI BAWAH BARU */
+        .page-navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            width: 55px;
+            height: 55px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4rem;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Transisi dengan efek 'bouncy' */
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--accent-color);
+            transform: scale(1.15) rotate(-5deg);
+        }
+        
+        /* Kelas untuk menyembunyikan tombol saat tidak diperlukan (halaman pertama/terakhir) */
+        .nav-btn.hidden {
+            visibility: hidden;
+            opacity: 0;
+            transform: scale(0.5);
+            pointer-events: none;
+        }
+        
+        /* STYLING KONTEN SLIDE */
+        .section-title {
+            font-family: 'Playfair Display', serif; font-size: 3rem;
+            color: var(--secondary-color); margin-bottom: 40px; position: relative;
+        }
+        .section-title::after {
+            content: '💕'; font-size: 1.5rem; position: absolute;
+            bottom: -25px; left: 50%; transform: translateX(-50%);
+            color: var(--primary-color);
+        }
+        
+        /* Slide 1: Hero */
+        .slide-hero {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://source.unsplash.com/1600x900/?galaxy,love,stars') no-repeat center center/cover;
+            color: white;
+        }
+        .slide-hero h1 { font-family: 'Dancing Script', cursive; font-size: 5.5rem; text-shadow: 3px 3px 6px rgba(0,0,0,0.6); }
+        .slide-hero p { font-size: 1.3rem; max-width: 600px; margin: 20px auto; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); }
+        .start-journey-btn {
+            display: inline-block; padding: 12px 30px; margin-top: 30px;
+            background: white; color: var(--secondary-color);
+            border-radius: 50px; text-decoration: none; font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .start-journey-btn:hover { background: var(--primary-color); color: white; transform: scale(1.1); }
+        
+        /* Slide 2: Counter */
+        #countup {
+            background: var(--card-bg); padding: 40px;
+            border-radius: 12px; box-shadow: var(--shadow);
+            border-top: 5px solid var(--primary-color); width: 100%;
+        }
+        #timer-container { display:flex; justify-content:space-around; text-align:center; }
+        #timer-container > div { font-size: 2.5rem; font-weight: 600; color: var(--accent-color); }
+        #timer-container span { font-size: 1rem; color: var(--text-color); display: block; }
+        
+        /* Slide 6: Impian & Kuis */
+        .dreams-quiz-container { display: flex; gap: 30px; text-align: left; }
+        .dreams-container, .quiz-container { flex: 1; }
+        .dreams-list { list-style: none; }
+        .dreams-list li {
+            background: var(--card-bg); margin-bottom: 15px; padding: 15px;
+            border-radius: 8px; box-shadow: var(--shadow); display: flex;
+            align-items: center; transition: transform 0.3s;
+        }
+        .dreams-list li:hover { transform: translateY(-5px); }
+        .dreams-list i { font-size: 1.3rem; color: var(--accent-color); margin-right: 15px; }
+
+        #quiz { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: var(--shadow); }
+
+        /* MODAL (JENDELA POP-UP) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 2000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
+        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: var(--bg-color); padding: 40px; border-radius: 12px;
+            max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto;
+            position: relative; transform: scale(0.8);
+            transition: transform 0.4s ease;
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .close-modal {
+            position: absolute; top: 15px; right: 15px;
+            font-size: 2rem; font-weight: bold; color: var(--secondary-color);
+            cursor: pointer; border: none; background: none;
+        }
+        .love-letter-modal { font-family: 'Playfair Display', serif; font-size: 1.1rem; line-height: 2; }
+
+        /* Tombol untuk membuka Modal */
+        .modal-trigger-btn {
+            background-color: var(--accent-color); color: white;
+            padding: 12px 25px; border-radius: 50px; text-decoration: none;
+            font-weight: 600; cursor: pointer; border: none;
+            transition: all 0.3s ease;
+        }
+        .modal-trigger-btn:hover { background: var(--secondary-color); transform: scale(1.05); }
+
+        /* KODE CSS YANG SUDAH DIPERBAIKI DAN LENGKAP */
+        .timeline { position: relative; max-width: 100%; margin: 0 auto; } 
+        .timeline::after { content: ''; position: absolute; width: 4px; background-color: var(--primary-color); top: 0; bottom: 0; left: 50%; margin-left: -2px; } 
+        .timeline-item { padding: 10px 40px; position: relative; width: 50%; } 
+        .timeline-item.left { left: 0; } 
+        .timeline-item.right { left: 50%; } 
+        .timeline-item::after { content: ''; position: absolute; width: 20px; height: 20px; right: -10px; background-color: white; border: 4px solid var(--accent-color); top: 25px; border-radius: 50%; z-index: 1; } 
+        .right::after { left: -10px; } 
+        .timeline-content { padding: 20px 30px; background-color: var(--card-bg); position: relative; border-radius: 8px; box-shadow: var(--shadow); text-align: left; } 
+        .timeline-content h3 { color: var(--secondary-color); font-family: 'Playfair Display', serif; } 
+        .timeline-content .date { font-style: italic; color: var(--accent-color); font-weight: 600; }
+        
+        .reasons-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .reason-card-container { perspective: 1000px; } 
+        .reason-card { width: 100%; height: 250px; position: relative; transform-style: preserve-3d; transition: transform 0.8s; cursor: pointer; } 
+        .reason-card.is-flipped { transform: rotateY(180deg); } 
+        .card-face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px; border-radius: 12px; box-shadow: var(--shadow); } 
+        .card-front { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; } 
+        .card-front h3 { font-size: 1.5rem; } 
+        .card-back { background-color: var(--card-bg); transform: rotateY(180deg); }
+        
+        .gallery-item { position: relative; overflow: hidden; border-radius: 8px; box-shadow: var(--shadow); cursor: pointer; } 
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; } 
+        .gallery-item:hover img { transform: scale(1.1) rotate(2deg); } 
+        .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; padding: 30px 15px 15px; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; } 
+        .gallery-item:hover .overlay { opacity: 1; transform: translateY(0); }
+        
+        .question { margin-bottom: 20px; font-weight: 600; } 
+        .options { list-style: none; margin-bottom: 20px; } 
+        .options li { padding: 10px; margin-bottom: 8px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; } 
+        .options li:hover { background-color: #f0f0f0; } 
+        #submit-quiz { display: block; width: 100%; padding: 15px; background-color: var(--accent-color); color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; transition: background-color 0.3s; } 
+        #submit-quiz:hover { background-color: var(--secondary-color); } 
+        #quiz-results { margin-top: 20px; font-weight: bold; text-align: center; }
+        
+        @media screen and (max-width: 768px) { 
+            .slide { padding: 20px; } 
+            .dreams-quiz-container { flex-direction: column; } 
+            .timeline::after { left: 20px; } 
+            .timeline-item { width: 100%; padding-left: 60px; padding-right: 15px; } 
+            .timeline-item.left, .timeline-item.right { left: 0%; } 
+            .timeline-item::after { left: 10px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-navigation">
+        <button id="prev-btn" class="nav-btn"><i class="fas fa-arrow-left"></i></button>
+        <button id="next-btn" class="nav-btn"><i class="fas fa-arrow-right"></i></button>
+    </div>
+
+    <main id="main-container">
+
+        <div class="slide slide-hero">
+            <div class="slide-content">
+                <h1>Dimensi Cinta Kita</h1>
+                <p>Bukan sekadar cerita, tapi sebuah perjalanan interaktif melintasi ruang dan waktu yang kita ciptakan bersama.</p>
+                <a href="#" class="start-journey-btn" data-slide="1">Mulai Perjalanan →</a>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-content">
+                <div id="countup">
+                    <h2 class="section-title">Waktu Indah Bersama</h2>
+                    <div id="timer-container">
+                        <div id="years"></div> <div id="days"></div> <div id="hours"></div>
+                        <div id="minutes"></div> <div id="seconds"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Buku Cerita Kita</h2>
+                <div class="timeline">
+                    <div class="timeline-item left"><div class="timeline-content"><h3>Bab 1: Pertemuan Tak Terduga</h3><p class="date">15 Januari 2023</p><p>Sebuah kebetulan yang ternyata menjadi takdir terbaik.</p></div></div>
+                    <div class="timeline-item right"><div class="timeline-content"><h3>Bab 2: Kencan Pertama</h3><p class="date">1 Februari 2023</p><p>Malam penuh tawa di kedai kopi sederhana.</p></div></div>
+                    <div class="timeline-item left"><div class="timeline-content"><h3>Bab 3: Dua Hati Menjadi Satu</h3><p class="date">14 Februari 2023</p><p>Bukan karena Valentine, tapi karena kita tahu, perjalanan ini lebih indah bersama.</p></div></div>
+                    <div class="timeline-item right"><div class="timeline-content"><h3>Bab 4: Petualangan Pertama</h3><p class="date">20 Juni 2024</p><p>Mendaki gunung, tersesat sedikit, dan menemukan pemandangan yang luar biasa.</p></div></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Jutaan Alasan...</h2>
+                <p style="margin-bottom: 30px;">Klik setiap kartu untuk mengungkap alasan di baliknya.</p>
+                <div class="reasons-grid">
+                    <div class="reason-card-container"><div class="reason-card"><div class="card-face card-front"><h3>Senyummu</h3></div><div class="card-face card-back"><p>Seperti matahari terbit, mampu mencerahkan hariku.</p></div></div></div>
+                     <div class="reason-card-container"><div class="reason-card"><div class="card-face card-front"><h3>Caramu Mendengar</h3></div><div class="card-face card-back"><p>Kamu tidak hanya mendengar, tapi benar-benar memahami.</p></div></div></div>
+                     <div class="reason-card-container"><div class="reason-card"><div class="card-face card-front"><h3>Leluconmu</h3></div><div class="card-face card-back"><p>Walaupun kadang garing, tapi selalu berhasil membuatku tertawa.</p></div></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Album Kenangan Kita</h2>
+                <div class="gallery">
+                    <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?couple,happy" alt="Kenangan 1"><div class="overlay">Momen Bahagia</div></div>
+                     <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?couple,travel" alt="Kenangan 2"><div class="overlay">Petualangan Kita</div></div>
+                     <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?couple,silly" alt="Kenangan 3"><div class="overlay">Sisi Konyol</div></div>
+                     <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?couple,eating" alt="Kenangan 4"><div class="overlay">Kulineran Bareng</div></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Rencana & Permainan</h2>
+                <div class="dreams-quiz-container">
+                    <div class="dreams-container">
+                        <h3>Impian Masa Depan</h3>
+                        <ul class="dreams-list">
+                            <li><i class="fas fa-home"></i><span>Punya rumah kecil dengan taman bunga.</span></li>
+                            <li><i class="fas fa-map-marked-alt"></i><span>Menjelajahi Eropa bersama.</span></li>
+                            <li><i class="fas fa-dog"></i><span>Mengadopsi seekor anjing lucu.</span></li>
+                            <li><i class="fas fa-star"></i><span>Melihat bintang di tempat yang jauh dari kota.</span></li>
+                        </ul>
+                    </div>
+                    <div class="quiz-container">
+                        <h3>Kuis Tentang Kita</h3>
+                        <div id="quiz">
+                            <p class="question">1. Apa nama kafe tempat kita kencan pertama?</p>
+                            <ul class="options" data-answer="Kopi Kenangan"><li role="button">Senja Punya Cerita</li><li role="button">Kopi Kenangan</li><li role="button">Titik Temu</li></ul>
+                            <button id="submit-quiz" class="modal-trigger-btn">Lihat Hasil!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Bab Selanjutnya...</h2>
+                <img src="https://source.unsplash.com/300x300/?couple,holdinghands" style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover; margin-bottom: 20px; box-shadow: var(--shadow);">
+                <p style="max-width: 600px; margin: 0 auto 30px;">Perjalanan kita tidak berakhir di sini. Ini hanyalah sebuah pengingat dari semua yang telah kita lalui dan semua yang menanti di depan. Ada sesuatu yang ingin kusampaikan...</p>
+                <button class="modal-trigger-btn" data-modal="letterModal">Baca Surat Cintaku</button>
+            </div>
+        </div>
+
+    </main>
+    
+    <div id="letterModal" class="modal-overlay">
+        <div class="modal-content love-letter-modal">
+            <button class="close-modal">&times;</button>
+            <h3>Untuk belahan jiwaku, [Nama Pasangan],</h3>
+            <p>Menuliskan semua perasaanku padamu seperti mencoba menghitung bintang di langit; mustahil, tak terbatas, namun indah untuk dicoba. Terima kasih telah menjadi pelangi setelah hujanku, dan menjadi musik dalam diamku...</p>
+            <p>Mari kita terus tulis buku cerita ini, hingga halaman terakhir. Aku mencintaimu, lebih dari kata-kata yang bisa ku tulis.</p>
+            <p style="text-align: right; margin-top: 20px;">Dengan segenap hati,<br><b>[Nama Kamu]</b></p>
+        </div>
+    </div>
+    
+    <div id="quizResultModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2 class="section-title">Hasil Kuismu!</h2>
+            <p id="quiz-results" style="font-size: 1.2rem; text-align:center;"></p>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainContainer = document.getElementById('main-container');
+            const slides = document.querySelectorAll('.slide');
+            // [PERUBAHAN JS] Mengambil referensi tombol baru
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            const totalSlides = slides.length;
+            let currentSlide = 0;
+            // let isScrolling = false; // Variabel ini tidak diperlukan lagi
+
+            // Inisialisasi Lebar Container
+            mainContainer.style.width = `${totalSlides * 100}vw`;
+            
+            // [PERUBAHAN JS] Memanggil fungsi untuk update tombol saat pertama kali load
+            updateNavControls();
+
+            // FUNGSI UTAMA NAVIGASI
+            function goToSlide(slideIndex) {
+                if (slideIndex < 0 || slideIndex >= totalSlides) return;
+                currentSlide = slideIndex;
+                mainContainer.style.transform = `translateX(-${currentSlide * 100}vw)`;
+                // [PERUBAHAN JS] Memanggil fungsi update tombol setiap kali slide berubah
+                updateNavControls();
+            }
+
+            // [PERUBAHAN JS] Fungsi baru untuk mengontrol visibilitas tombol
+            function updateNavControls() {
+                // Sembunyikan tombol 'prev' di slide pertama
+                if (currentSlide === 0) {
+                    prevBtn.classList.add('hidden');
+                } else {
+                    prevBtn.classList.remove('hidden');
+                }
+                // Sembunyikan tombol 'next' di slide terakhir
+                if (currentSlide === totalSlides - 1) {
+                    nextBtn.classList.add('hidden');
+                } else {
+                    nextBtn.classList.remove('hidden');
+                }
+            }
+
+            // [PERUBAHAN JS] EVENT LISTENERS BARU UNTUK TOMBOL
+            prevBtn.addEventListener('click', () => {
+                goToSlide(currentSlide - 1);
+            });
+
+            nextBtn.addEventListener('click', () => {
+                goToSlide(currentSlide + 1);
+            });
+            
+            document.querySelector('.start-journey-btn').addEventListener('click', e => {
+                e.preventDefault();
+                goToSlide(parseInt(e.target.dataset.slide));
+            });
+
+            // [PERUBAHAN JS] NAVIGASI DENGAN SCROLL MOUSE DIHAPUS
+            /* window.addEventListener('wheel', e => { ... }); -> BLOK INI DIHAPUS
+            */
+            
+            // Navigasi dengan keyboard tetap dipertahankan untuk aksesibilitas
+            window.addEventListener('keydown', e => {
+                if(e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+                if(e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+            });
+
+
+            // --- FUNGSI INTERAKSI LAINNYA (TIDAK ADA PERUBAHAN) ---
+
+            // Counter Waktu
+            const startDate = new Date(2023, 1, 14); // GANTI TANGGAL JADIAN
+            const timerEls = { years: document.getElementById('years'), days: document.getElementById('days'), hours: document.getElementById('hours'), minutes: document.getElementById('minutes'), seconds: document.getElementById('seconds'), };
+            function updateTimer() {
+                const now = new Date(); let diff = now - startDate;
+                const s = Math.floor(diff / 1000); const m = Math.floor(s / 60); const h = Math.floor(m / 60); const d = Math.floor(h / 24); const y = Math.floor(d / 365.25);
+                if(timerEls.seconds) timerEls.seconds.innerHTML = `${s % 60} <span>Detik</span>`;
+                if(timerEls.minutes) timerEls.minutes.innerHTML = `${m % 60} <span>Menit</span>`;
+                if(timerEls.hours) timerEls.hours.innerHTML = `${h % 24} <span>Jam</span>`;
+                if(timerEls.days) timerEls.days.innerHTML = `${Math.floor(d % 365.25)} <span>Hari</span>`;
+                if(timerEls.years) timerEls.years.innerHTML = `${y} <span>Tahun</span>`;
+            }
+            setInterval(updateTimer, 1000); updateTimer();
+
+            // Kartu Alasan
+            const cards = document.querySelectorAll('.reason-card');
+            cards.forEach(card => card.addEventListener('click', () => card.classList.toggle('is-flipped')));
+
+            // FUNGSI MODAL
+            const modalTriggers = document.querySelectorAll('.modal-trigger-btn');
+            modalTriggers.forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    // Cek jika tombol BUKAN tombol submit kuis, baru buka modal berdasarkan data-modal
+                    if (e.target.id !== 'submit-quiz') {
+                       openModal(trigger.dataset.modal);
+                    }
+                });
+            });
+            
+            const closeButtons = document.querySelectorAll('.close-modal');
+            closeButtons.forEach(button => button.addEventListener('click', () => closeModal(button.closest('.modal-overlay'))));
+
+            const modalOverlays = document.querySelectorAll('.modal-overlay');
+            modalOverlays.forEach(overlay => {
+                overlay.addEventListener('click', e => {
+                    if (e.target === overlay) closeModal(overlay);
+                });
+            });
+
+            function openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.classList.add('show');
+            }
+            function closeModal(modal) {
+                if (modal) modal.classList.remove('show');
+            }
+
+            // Kuis (dengan hasil di Modal)
+            const quizOptions = document.querySelectorAll('#quiz .options li');
+            let selectedAnswers = {};
+            quizOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const parentUl = option.parentElement; const question = parentUl.previousElementSibling.textContent;
+                    parentUl.querySelectorAll('li').forEach(li => li.style.backgroundColor = '');
+                    option.style.backgroundColor = 'var(--primary-color)';
+                    selectedAnswers[question] = option.textContent;
+                });
+            });
+
+            document.getElementById('submit-quiz').addEventListener('click', () => {
+                let score = 0;
+                const questions = document.querySelectorAll('#quiz .options');
+                questions.forEach(q => {
+                    const questionText = q.previousElementSibling.textContent;
+                    const correctAnswer = q.dataset.answer;
+                    if (selectedAnswers[questionText] === correctAnswer) score++;
+                });
+                const totalQuestions = questions.length;
+                document.getElementById('quiz-results').innerHTML = `Skor kamu: <strong>${score} dari ${totalQuestions}</strong>!<br>Kamu memang yang paling tahu tentang kita! ❤`;
+                openModal('quizResultModal'); // Tampilkan hasil di modal
+            });
+        });
+    </script>
+</body>
+</html>

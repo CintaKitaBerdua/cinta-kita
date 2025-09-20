@@ -196,9 +196,30 @@
         .card-front { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; } 
         .card-front h3 { font-size: 1.5rem; } 
         .card-back { background-color: var(--card-bg); transform: rotateY(180deg); }
-        
-        .gallery-item { position: relative; overflow: hidden; border-radius: 8px; box-shadow: var(--shadow); cursor: pointer; } 
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; } 
+        .gallery {
+            display: grid;
+            /* Membuat 3 kolom dengan lebar yang sama */
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px; /* Jarak antar foto */
+        }
+        .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    /* TAMBAHAN: Atur tinggi yang pasti dan beri background agar rapi */
+    height: 300px; /* Kamu bisa sesuaikan tingginya */
+    background-color: #f0f0f0; /* Warna latar belakang jika foto tidak penuh */
+}
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    /* PERUBAHAN UTAMA: 'contain' agar gambar utuh, tidak terpotong */
+    object-fit: contain; 
+    display: block;
+    transition: transform 0.4s ease;
+}
         .gallery-item:hover img { transform: scale(1.1) rotate(2deg); } 
         .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; padding: 30px 15px 15px; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; } 
         .gallery-item:hover .overlay { opacity: 1; transform: translateY(0); }
@@ -218,6 +239,9 @@
             .timeline-item { width: 100%; padding-left: 60px; padding-right: 15px; } 
             .timeline-item.left, .timeline-item.right { left: 0%; } 
             .timeline-item::after { left: 10px; } 
+            .gallery {
+            grid-template-columns: repeat(2, 1fr); /* Jadi 2 kolom di layar kecil */
+        }
         }
     </style>
 </head>
@@ -241,7 +265,7 @@
         <div class="slide">
             <div class="slide-content">
                 <div id="countup">
-                    <h2 class="section-title">Waktu Indah Bersama</h2>
+                    <h2 class="section-title">Waktu Indah Bersama Dari Awal Kita Jadian </h2>
                     <div id="timer-container">
                         <div id="years"></div> <div id="days"></div> <div id="hours"></div>
                         <div id="minutes"></div> <div id="seconds"></div>
@@ -254,10 +278,10 @@
             <div class="slide-content">
                 <h2 class="section-title">Buku Cerita Kita</h2>
                 <div class="timeline">
-                    <div class="timeline-item left"><div class="timeline-content"><h3>Bab 1: Pertemuan Tak Terduga</h3><p class="date">15 Januari 2023</p><p>Sebuah kebetulan yang ternyata menjadi takdir terbaik.</p></div></div>
-                    <div class="timeline-item right"><div class="timeline-content"><h3>Bab 2: Kencan Pertama</h3><p class="date">1 Februari 2023</p><p>Malam penuh tawa di kedai kopi sederhana.</p></div></div>
-                    <div class="timeline-item left"><div class="timeline-content"><h3>Bab 3: Dua Hati Menjadi Satu</h3><p class="date">14 Februari 2023</p><p>Bukan karena Valentine, tapi karena kita tahu, perjalanan ini lebih indah bersama.</p></div></div>
-                    <div class="timeline-item right"><div class="timeline-content"><h3>Bab 4: Petualangan Pertama</h3><p class="date">20 Juni 2024</p><p>Mendaki gunung, tersesat sedikit, dan menemukan pemandangan yang luar biasa.</p></div></div>
+                    <div class="timeline-item left"><div class="timeline-content"><h3>Bab 1: Pertemuan Tak Terduga</h3><p class="date">31 Agustus 2023</p><p>Sebuah kebetulan yang ternyata menjadi takdir terbaik dalam hidupku.</p></div></div>
+                    <div class="timeline-item right"><div class="timeline-content"><h3>Bab 2: Kencan Pertama</h3><p class="date">Sebelum Jadian di Bulan Desember 2023</p><p>Malam penuh tawa dan saling timbul rasa lewat mata dan turun ke hati.</p></div></div>
+                    <div class="timeline-item left"><div class="timeline-content"><h3>Bab 3: Dua Hati Menjadi Satu</h3><p class="date">15 Desember 2023</p><p>Bukan karena Valentine, tapi karena kita tahu, perjalanan ini lebih indah bersama nanti kedepannya dan sampe sekarang pun masih bersama dan lebih bahagia.</p></div></div>
+                    <div class="timeline-item right"><div class="timeline-content"><h3>Bab 4: Petualangan Pertama</h3><p class="date">Bulan Desember 2023</p><p>Menjelajah lautan pantai yang begitu memanjakan mata tapi tidak sememanjakan ketika melihat dirimu Putri Fadilah seakan-akan melihat pemandangan yang luar biasa.</p></div></div>
                 </div>
             </div>
         </div>
@@ -267,9 +291,46 @@
                 <h2 class="section-title">Jutaan Alasan...</h2>
                 <p style="margin-bottom: 30px;">Klik setiap kartu untuk mengungkap alasan di baliknya.</p>
                 <div class="reasons-grid">
-                    <div class="reason-card-container"><div class="reason-card"><div class="card-face card-front"><h3>Senyummu</h3></div><div class="card-face card-back"><p>Seperti matahari terbit, mampu mencerahkan hariku.</p></div></div></div>
-                     <div class="reason-card-container"><div class="reason-card"><div class="card-face card-front"><h3>Caramu Mendengar</h3></div><div class="card-face card-back"><p>Kamu tidak hanya mendengar, tapi benar-benar memahami.</p></div></div></div>
-                     <div class="reason-card-container"><div class="reason-card"><div class="card-face card-front"><h3>Leluconmu</h3></div><div class="card-face card-back"><p>Walaupun kadang garing, tapi selalu berhasil membuatku tertawa.</p></div></div></div>
+                    <div class="reason-card-container">
+                        <div class="reason-card">
+                            <div class="card-face card-front"><h3>Paras & Hatimu</h3></div>
+                            <div class="card-face card-back"><p>Kecantikanmu menyejukkan mata, tapi kebaikan hatimu yang tulus benar-benar menenangkan jiwa. Paket lengkap yang sempurna.</p></div>
+                        </div>
+                    </div>
+                    
+                    <div class="reason-card-container">
+                        <div class="reason-card">
+                            <div class="card-face card-front"><h3>Canda Tawamu</h3></div>
+                            <div class="card-face card-back"><p>Suara tawamu adalah musik favoritku. Selalu berhasil mengubah hari yang biasa menjadi luar biasa dan penuh warna.</p></div>
+                        </div>
+                    </div>
+                    
+                    <div class="reason-card-container">
+                        <div class="reason-card">
+                            <div class="card-face card-front"><h3>Perhatianmu</h3></div>
+                            <div class="card-face card-back"><p>Dari hal kecil hingga hal besar, kamu selalu membuatku merasa menjadi prioritas utama. Aku merasa sangat dihargai dan dicintai.</p></div>
+                        </div>
+                    </div>
+                    <div class="reason-card-container">
+                        <div class="reason-card">
+                            <div class="card-face card-front"><h3>Dukunganmu</h3></div>
+                            <div class="card-face card-back"><p>Saat aku ragu, kamu selalu jadi orang pertama yang percaya padaku. Kamu adalah sistem pendukung terbaik yang pernah ada.</p></div>
+                        </div>
+                    </div>
+                    
+                    <div class="reason-card-container">
+                        <div class="reason-card">
+                            <div class="card-face card-front"><h3>Rasa Aman</h3></div>
+                            <div class="card-face card-back"><p>Di dekatmu, aku bisa menjadi diriku sendiri seutuhnya tanpa takut dihakimi. Kamu adalah rumahku.</p></div>
+                        </div>
+                    </div>
+                    
+                    <div class="reason-card-container">
+                        <div class="reason-card">
+                            <div class="card-face card-front"><h3>Kehadiranmu</h3></div>
+                            <div class="card-face card-back"><p>Cukup dengan berada di sisiku, dunia terasa lebih damai dan semua masalah terasa lebih ringan. Kamu adalah penenang terbaikku.</p></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -278,11 +339,14 @@
             <div class="slide-content">
                 <h2 class="section-title">Album Kenangan Kita</h2>
                 <div class="gallery">
-                    <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?couple,happy" alt="Kenangan 1"><div class="overlay">Momen Bahagia</div></div>
-                     <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?couple,travel" alt="Kenangan 2"><div class="overlay">Petualangan Kita</div></div>
-                     <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?couple,silly" alt="Kenangan 3"><div class="overlay">Sisi Konyol</div></div>
-                     <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?couple,eating" alt="Kenangan 4"><div class="overlay">Kulineran Bareng</div></div>
+                    <div class="gallery-item"><img src="foto-1.jpg" alt="Kenangan 1"><div class="overlay">Momen Bahagia</div></div>
+                    <div class="gallery-item"><img src="foto-2.jpg" alt="Kenangan 2"><div class="overlay">Petualangan Kita</div></div>
+                    <div class="gallery-item"><img src="foto-3.jpg" alt="Kenangan 3"><div class="overlay">Sisi Konyol</div></div>
+                    <div class="gallery-item"><img src="foto-4.jpg" alt="Kenangan 4"><div class="overlay">Kulineran Bareng</div></div>
+                    <div class="gallery-item"><img src="foto-5.jpg" alt="Kenangan 5"><div class="overlay">Hari Spesial</div></div>
+                    <div class="gallery-item"><img src="foto-6.jpg" alt="Kenangan 6"><div class="overlay">Selalu Bersama</div></div>
                 </div>
+
             </div>
         </div>
         
@@ -293,17 +357,44 @@
                     <div class="dreams-container">
                         <h3>Impian Masa Depan</h3>
                         <ul class="dreams-list">
-                            <li><i class="fas fa-home"></i><span>Punya rumah kecil dengan taman bunga.</span></li>
-                            <li><i class="fas fa-map-marked-alt"></i><span>Menjelajahi Eropa bersama.</span></li>
-                            <li><i class="fas fa-dog"></i><span>Mengadopsi seekor anjing lucu.</span></li>
-                            <li><i class="fas fa-star"></i><span>Melihat bintang di tempat yang jauh dari kota.</span></li>
-                        </ul>
+                            <ul class="dreams-list">
+                                <li><i class="fas fa-home"></i><span>Punya rumah yang nyaman dengan halaman yang luas dan taman bunga.</span></li>
+                                <li><i class="fas fa-route"></i><span>Menjelajah indahnya kota-kota di jawa</span></li>
+                                <li><i class="fas fa-children"></i><span>Mempunyai Anak Kembar yang Sehat.</span></li>
+                                <li><i class="fas fa-ring"></i><span>Hidup Nyaman Damai dan Bahagia Selalu Sampai Maut Memisahkan.</span></li>
+                            </ul>                            
                     </div>
                     <div class="quiz-container">
                         <h3>Kuis Tentang Kita</h3>
                         <div id="quiz">
                             <p class="question">1. Apa nama kafe tempat kita kencan pertama?</p>
-                            <ul class="options" data-answer="Kopi Kenangan"><li role="button">Senja Punya Cerita</li><li role="button">Kopi Kenangan</li><li role="button">Titik Temu</li></ul>
+                            <ul class="options" data-answer="Kafe Tbs">
+                                <li role="button">Senja Punya Cerita</li>
+                                <li role="button">Kafe Tbs</li>
+                                <li role="button">Kulcim</li>
+                            </ul>
+                    
+                            <p class="question">2. Tempat laut pertama yang kita jelajah apa?</p>
+                            <ul class="options" data-answer="Tiris">
+                                <li role="button">Karangsong</li>
+                                <li role="button">Tiris</li>
+                                <li role="button">Balongan</li>
+                            </ul>
+                    
+                            <p class="question">3. Apa makanan kesukaan Muhammad Cepy?</p>
+                            <ul class="options" data-answer="Suka semua">
+                                <li role="button">Ayam goreng</li>
+                                <li role="button">Ikan goreng</li>
+                                <li role="button">Suka semua</li>
+                            </ul>
+                            
+                            <p class="question">4. Apa makanan kesukaan Putri Fadillah?</p>
+                            <ul class="options" data-answer="Ikan">
+                                <li role="button">Ikan</li>
+                                <li role="button">Kulit ayam</li>
+                                <li role="button">Semua suka</li>
+                            </ul>
+                    
                             <button id="submit-quiz" class="modal-trigger-btn">Lihat Hasil!</button>
                         </div>
                     </div>
@@ -314,7 +405,7 @@
         <div class="slide">
             <div class="slide-content">
                 <h2 class="section-title">Bab Selanjutnya...</h2>
-                <img src="https://source.unsplash.com/300x300/?couple,holdinghands" style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover; margin-bottom: 20px; box-shadow: var(--shadow);">
+                <img src="foto-2.jpg" style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover; margin-bottom: 20px; box-shadow: var(--shadow);">
                 <p style="max-width: 600px; margin: 0 auto 30px;">Perjalanan kita tidak berakhir di sini. Ini hanyalah sebuah pengingat dari semua yang telah kita lalui dan semua yang menanti di depan. Ada sesuatu yang ingin kusampaikan...</p>
                 <button class="modal-trigger-btn" data-modal="letterModal">Baca Surat Cintaku</button>
             </div>
@@ -325,10 +416,10 @@
     <div id="letterModal" class="modal-overlay">
         <div class="modal-content love-letter-modal">
             <button class="close-modal">&times;</button>
-            <h3>Untuk belahan jiwaku, [Nama Pasangan],</h3>
+            <h3>Untuk belahan jiwaku, Putri Fadillah,</h3>
             <p>Menuliskan semua perasaanku padamu seperti mencoba menghitung bintang di langit; mustahil, tak terbatas, namun indah untuk dicoba. Terima kasih telah menjadi pelangi setelah hujanku, dan menjadi musik dalam diamku...</p>
             <p>Mari kita terus tulis buku cerita ini, hingga halaman terakhir. Aku mencintaimu, lebih dari kata-kata yang bisa ku tulis.</p>
-            <p style="text-align: right; margin-top: 20px;">Dengan segenap hati,<br><b>[Nama Kamu]</b></p>
+            <p style="text-align: right; margin-top: 20px;">Dengan segenap hati,<br><b>Muhammad Cepy (Cecep)</b></p>
         </div>
     </div>
     
@@ -412,7 +503,7 @@
             // --- FUNGSI INTERAKSI LAINNYA (TIDAK ADA PERUBAHAN) ---
 
             // Counter Waktu
-            const startDate = new Date(2023, 1, 14); // GANTI TANGGAL JADIAN
+            const startDate = new Date(2023, 11, 15); // Tanggal diubah ke 15 Desember 2023
             const timerEls = { years: document.getElementById('years'), days: document.getElementById('days'), hours: document.getElementById('hours'), minutes: document.getElementById('minutes'), seconds: document.getElementById('seconds'), };
             function updateTimer() {
                 const now = new Date(); let diff = now - startDate;
@@ -471,17 +562,32 @@
             });
 
             document.getElementById('submit-quiz').addEventListener('click', () => {
-                let score = 0;
-                const questions = document.querySelectorAll('#quiz .options');
-                questions.forEach(q => {
-                    const questionText = q.previousElementSibling.textContent;
-                    const correctAnswer = q.dataset.answer;
-                    if (selectedAnswers[questionText] === correctAnswer) score++;
-                });
-                const totalQuestions = questions.length;
-                document.getElementById('quiz-results').innerHTML = `Skor kamu: <strong>${score} dari ${totalQuestions}</strong>!<br>Kamu memang yang paling tahu tentang kita! ❤`;
-                openModal('quizResultModal'); // Tampilkan hasil di modal
-            });
+    let score = 0;
+    const questions = document.querySelectorAll('#quiz .options');
+    questions.forEach(q => {
+        const questionText = q.previousElementSibling.textContent;
+        const correctAnswer = q.dataset.answer;
+        if (selectedAnswers[questionText] === correctAnswer) {
+            score++;
+        }
+    });
+    
+    const totalQuestions = questions.length;
+    const quizResults = document.getElementById('quiz-results');
+    let resultMessage = '';
+
+    if (score === totalQuestions) {
+        resultMessage = `Skor kamu: <strong>${score} dari ${totalQuestions}</strong>!<br>SEMPURNA! Kamu memang yang paling tahu segalanya tentang kita! ❤️`;
+    } else if (score > 0) {
+        resultMessage = `Skor kamu: <strong>${score} dari ${totalQuestions}</strong>!<br>Hmm, lumayan! Tapi yuk, ingat-ingat lagi momen kita. 😉`;
+    } else {
+        resultMessage = `Skor kamu: <strong>${score} dari ${totalQuestions}</strong>.<br>Yahh, kok salah semua? Sini peluk dulu, kita buat kenangan baru! 🤗`;
+    }
+
+    quizResults.innerHTML = resultMessage;
+    openModal('quizResultModal'); // Tampilkan hasil di modal
+});
+
         });
     </script>
 </body>
